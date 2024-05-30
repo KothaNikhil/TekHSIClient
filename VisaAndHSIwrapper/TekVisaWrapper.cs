@@ -71,7 +71,8 @@ namespace VisaAndHSIwrapper
 
         public string Query(string message)
         {
-            visa_obj.Query(message, out string value);
+            string value;
+            visa_obj.Query(message, out value);
             return value;
         }
 

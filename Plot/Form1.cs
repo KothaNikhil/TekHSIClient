@@ -131,7 +131,7 @@ namespace Plot
                 int n = Convert.ToInt32(wfm.Count); // Replace with your desired value of n
                 double[] dataX = Enumerable.Range(0, n).Select(x => (double)x).ToArray();
 
-                LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, wfm.ToArray(), color: Colors[color++], SymbolType.None);
+                LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, wfm.ToArray(), color: Colors[color++]);
 
                 // Set the x-axis scale
                 graphPane.XAxis.Scale.Min = 0; // Minimum value

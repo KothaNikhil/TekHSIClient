@@ -57,7 +57,10 @@ namespace VisaAndHSIwrapper
             List<INormalizedVector> wfms = new List<INormalizedVector>();
             foreach (var datum in data.OrderBy(x => ((Tek.Scope.Support.INormalizedVector)x).SourceName))
             {
-                if (!(datum is INormalizedVector wfm))
+                INormalizedVector wfm;
+                if (datum is INormalizedVector)
+                    wfm = datum as INormalizedVector;
+                else
                     continue;
 
                 wfms.Add(wfm);
