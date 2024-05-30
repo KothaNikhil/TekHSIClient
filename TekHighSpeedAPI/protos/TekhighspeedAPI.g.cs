@@ -5,6 +5,8 @@
 #pragma warning disable 1591, 0612, 3021, 8981
 #region Designer generated code
 
+#define GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+
 using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
