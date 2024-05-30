@@ -31,7 +31,7 @@ namespace VisaAndHSIwrapper
                 hsiClient = HSIClient.Connect(ip, channels);
                 if (hsiClient == null) return false;
                 connected_ip = ip;
-                hsiClient.DataAccess += DataAccess;
+                SubscribeToDataAccess();
                 return true;
             }
             catch
@@ -40,16 +40,20 @@ namespace VisaAndHSIwrapper
             }
         }
 
+        public void SubscribeToDataAccess()
+        {
+            hsiClient.DataAccess += DataAccess;
+        }
+
         public void StartCapturingData()
         {
             hsiClient.Start();
         }
 
-        string[] rlens = new string[] {"1000","2000","5000","10000","20000","50000",
-                "100000","200000","500000","1000000","2000000","5000000","10000000","20000000","50000000"};
-
         private void DataAccess(HSIClient hsi, CancellationToken tok, IEnumerable<object> data, double updateTime)
         {
+            hsiClient.DataAccess -= DataAccess;
+
             List<INormalizedVector> wfms = new List<INormalizedVector>();
             foreach (var datum in data.OrderBy(x => ((Tek.Scope.Support.INormalizedVector)x).SourceName))
             {

@@ -15,8 +15,13 @@ namespace Plot
     {
         private string ip = "";
         private string connected_ip = "-";
-        TekHSIwrapper tekHSIwrapper = new TekHSIwrapper();
+        TekHSIwrapper tekHSIwrapper = null;
+        TekVisaWrapper tekVisaWrapper = null;
         private readonly GraphPane graphPane;
+
+        string[] rlens = new string[] {"1000","2000","5000","10000","20000","50000",
+                "100000","200000","500000","1000000","2000000","5000000","10000000","20000000","50000000"};
+        int rlenIndex = 0;
 
         static readonly Color[] Colors = {
             Color.Yellow, Color.Cyan, Color.Red, Color.Green,
@@ -31,12 +36,27 @@ namespace Plot
             InitializeComponent();
 
             tekHSIwrapper.DataAvaialble += TekHSIwrapper_DataAvaialble;
+            tekVisaWrapper.StatusMessageUpdated += TekVisaWrapper_StatusMessageUpdated;
 
             graphPane = zedGraphControl1.GraphPane;
             graphPane.Title.Text = "Plot";
             graphPane.XAxis.Title.Text = "X Axis";
             graphPane.YAxis.Title.Text = "Y Axis";
             ip = textBox1.Text;
+        }
+
+        private void TekVisaWrapper_StatusMessageUpdated(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => {
+                    textBox4.AppendText((sender as string) + '\n');
+                }));
+            }
+            else
+            {
+                textBox4.AppendText((sender as string) + '\n');
+            }
         }
 
         /// <summary>
@@ -68,8 +88,22 @@ namespace Plot
         {
             if (string.Compare(ip, connected_ip, StringComparison.CurrentCultureIgnoreCase) == 0) return;
             string[] channels = textBox2.Text.Split(',');
-            bool isConnected = tekHSIwrapper.Connect(ip, channels);
-            if (isConnected)
+            string visaAddress = textBox3.Text;
+            tekHSIwrapper = new TekHSIwrapper();
+            tekVisaWrapper = new TekVisaWrapper();
+            bool isConnectedToHSI = tekHSIwrapper.Connect(ip, channels);
+            textBox4.AppendText("Connected to HSI: " + isConnectedToHSI + '\n');
+            bool isConnectToVisa = tekVisaWrapper.Connect(visaAddress);
+            if (!isConnectToVisa)
+            {
+                tekHSIwrapper.Dispose();
+                return;
+            }
+            textBox4.AppendText("Connected to visa: " + isConnectToVisa + '\n');
+            tekVisaWrapper.TurnOnChannels(channels);
+            tekVisaWrapper.SetScopeParams();
+            tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
+            if (isConnectedToHSI)
             {
                 tekHSIwrapper.StartCapturingData();
             }
@@ -88,16 +122,15 @@ namespace Plot
         private void TekHSIwrapper_DataAvaialble(object sender, EventArgs e)
         {
             var wfms = sender as List<INormalizedVector>;
-
             int color = 0;
             foreach (INormalizedVector wfm in wfms)
             {
                 ClearGraph();
 
+                textBox4.AppendText(wfm.SourceName + ": " + wfm.Count + '\n');
                 int n = Convert.ToInt32(wfm.Count); // Replace with your desired value of n
                 double[] dataX = Enumerable.Range(0, n).Select(x => (double)x).ToArray();
 
-                Trace.WriteLine(wfm.SourceName);
                 LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, wfm.ToArray(), color: Colors[color++], SymbolType.None);
 
                 // Set the x-axis scale
@@ -107,6 +140,14 @@ namespace Plot
                 zedGraphControl1.AxisChange();
                 zedGraphControl1.Invalidate();
             }
+            if(rlenIndex >= rlens.Length)
+            {
+                tekHSIwrapper.Dispose();
+                tekVisaWrapper.Dispose();
+                return;
+            }
+            tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
+            tekHSIwrapper.SubscribeToDataAccess();
         }
 
         private void ClearGraph()

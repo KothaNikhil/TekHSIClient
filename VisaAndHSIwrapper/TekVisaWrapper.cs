@@ -7,36 +7,51 @@ using TekVISANet;
 
 namespace VisaAndHSIwrapper
 {
-    public class TekVisaWrapper
+    public class TekVisaWrapper : IDisposable
     {
         private VISA visa_obj;
+        public event EventHandler StatusMessageUpdated;
 
         public bool Connect(string address)
         {
-            visa_obj = new VISA();
-            visa_obj.Open(address);
-
-            if (visa_obj.Status != TekVISADefs.Status.SUCCESS)
+            try
             {
-                Console.WriteLine(string.Format("Unable to connect to MSO at address {0}", address));
+                visa_obj = new VISA();
+                visa_obj.Open(address);
+
+                if (visa_obj.Status != TekVISADefs.Status.SUCCESS)
+                {
+                    StatusMessageUpdated?.Invoke(string.Format("Unable to connect to MSO at address {0}", address), null);
+                    return false;
+                }
+                string retString;
+                visa_obj.Query("*IDN?", out retString);
+                StatusMessageUpdated?.Invoke("Connected to: " + address, null);
+                return true;
+            }
+            catch(Exception e)
+            {
+                StatusMessageUpdated?.Invoke(e.Message, null);
                 return false;
             }
-            string retString;
-            visa_obj.Query("*IDN?", out retString);
-            Console.WriteLine("Connected to: " + address);
-            Console.WriteLine("*IDN? returned " + retString);
-            return true;
         }
 
         public void SetScopeParams()
         {
-            Write("DISplay:GLObal:CH1:STATE 1");
-            //Write("DISplay:GLObal:CH2:STATE 1");
+            Write("*RST");
             Write("DISplay:WAVEform OFF");
             Write("HOR:MODE MAN");
             Write("HOR:MODE:RECO 2500");
             Write("ACQuire:STOPAfter RUNStop");
             Write("ACQuire:STATE ON");
+        }
+
+        public void TurnOnChannels(string[] channels)
+        {
+            foreach(var ch in channels)
+            {
+                Write(string.Format("DISplay:GLObal:{0}:STATE 1", ch.ToUpper()));
+            }
         }
 
         public void SetRlen(string rlen)
@@ -58,6 +73,12 @@ namespace VisaAndHSIwrapper
         {
             visa_obj.Query(message, out string value);
             return value;
+        }
+
+        public void Dispose()
+        {
+            visa_obj.Close();
+            visa_obj.Dispose();
         }
     }
 }
