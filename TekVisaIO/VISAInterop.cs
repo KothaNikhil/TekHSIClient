@@ -102,7 +102,7 @@ namespace TekVISAIO
                 GetAttribute(TekVISADefs.Attributes.TMO_VALUE, out AttributeState);
                 return AttributeState;
             }
-            set => SetAttribute(TekVISADefs.Attributes.TMO_VALUE, value);
+            set { SetAttribute(TekVISADefs.Attributes.TMO_VALUE, value); }
         }
 
         public uint TimeoutRM { get; set; } = 5000;
@@ -1050,7 +1050,8 @@ namespace TekVISAIO
 
         public bool Read(int Count, out string OutputBuffer)
         {
-            return Read(Count, out var _, out OutputBuffer);
+            int x;
+            return Read(Count, out x, out OutputBuffer);
         }
 
         public unsafe bool Read(int Count, out int ReturnCount, out string OutputBuffer)
@@ -1147,9 +1148,10 @@ namespace TekVISAIO
                         {
                             var timeout = Timeout;
                             Timeout = 0U;
+                            uint rcount;
                             fixed (byte* pOutData2 = new byte[256])
                             {
-                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out var _);
+                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out rcount);
                             }
 
                             Timeout = timeout;
@@ -1212,9 +1214,10 @@ namespace TekVISAIO
                         {
                             var timeout = Timeout;
                             Timeout = 0U;
+                            uint rcount;
                             fixed (byte* pOutData2 = new byte[256])
                             {
-                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out var _);
+                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out rcount);
                             }
 
                             Timeout = timeout;
@@ -1279,9 +1282,10 @@ namespace TekVISAIO
                         {
                             var timeout = Timeout;
                             Timeout = 0U;
+                            uint rcount;
                             fixed (byte* pOutData2 = new byte[256])
                             {
-                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out var _);
+                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out rcount);
                             }
 
                             Timeout = timeout;
@@ -1346,9 +1350,10 @@ namespace TekVISAIO
                         {
                             var timeout = Timeout;
                             Timeout = 0U;
+                            uint rcount;
                             fixed (byte* pOutData2 = new byte[256])
                             {
-                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out var _);
+                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out rcount);
                             }
 
                             Timeout = timeout;
@@ -1412,9 +1417,10 @@ namespace TekVISAIO
                         {
                             var timeout = Timeout;
                             Timeout = 0U;
+                            uint rcount;
                             fixed (byte* pOutData2 = new byte[256])
                             {
-                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out var _);
+                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out rcount);
                             }
 
                             Timeout = timeout;
@@ -1479,9 +1485,10 @@ namespace TekVISAIO
                         {
                             var timeout = Timeout;
                             Timeout = 0U;
+                            uint rcount;
                             fixed (byte* pOutData2 = new byte[256])
                             {
-                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out var _);
+                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out rcount);
                             }
 
                             Timeout = timeout;
@@ -1546,9 +1553,10 @@ namespace TekVISAIO
                         {
                             var timeout = Timeout;
                             Timeout = 0U;
+                            uint rcount;
                             fixed (byte* pOutData2 = new byte[256])
                             {
-                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out var _);
+                                var num = (int)viReadVoid(InstrSession, pOutData2, 256U, out rcount);
                             }
 
                             Timeout = timeout;

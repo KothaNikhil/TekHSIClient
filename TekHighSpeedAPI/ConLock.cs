@@ -596,8 +596,8 @@ namespace TekHighspeedAPI
         /// </summary>
         public bool Logged
         {
-            get => _lock.Logged;
-            set => _lock.Logged = value;
+            get { return _lock.Logged; }
+            set { _lock.Logged = value; }
         }
 
         #region Add
@@ -823,7 +823,7 @@ namespace TekHighspeedAPI
 #pragma warning disable CS8603 // Possible null reference return.
                     return ((IDictionary<T, V>)_dictionary).ContainsKey(key)
                         ? ((IDictionary<T, V>)_dictionary)[key]
-                        : default;
+                        : default(V);
 #pragma warning restore CS8603 // Possible null reference return.
                 }
                 finally
@@ -831,7 +831,7 @@ namespace TekHighspeedAPI
                     _lock.ExitReadLock();
                 }
             }
-            set => Add(key, value);
+            set { Add(key, value); }
         }
 
         #endregion
@@ -1149,8 +1149,8 @@ namespace TekHighspeedAPI
         /// </summary>
         public bool Logged
         {
-            get => _lock.Logged;
-            set => _lock.Logged = value;
+            get { return _lock.Logged; }
+            set { _lock.Logged = value; }
         }
 
         #endregion
@@ -1746,7 +1746,7 @@ namespace TekHighspeedAPI
         public T Peek()
         {
 #pragma warning disable CS8603 // Possible null reference return.
-            if (_list.Count == 0) return default;
+            if (_list.Count == 0) return default(T);
 #pragma warning restore CS8603 // Possible null reference return.
             return _list[0];
         }
@@ -1769,8 +1769,8 @@ namespace TekHighspeedAPI
         /// <returns></returns>
         public T this[int index]
         {
-            get => _list[index];
-            set => _list[index] = value;
+            get { return _list[index]; }
+            set { _list[index] = value; }
         }
 
         /// <summary>

@@ -463,7 +463,8 @@ namespace TekHighspeedAPI
         /// <returns>Returns true if the parse succeeded, if parsing fails then false is returned</returns>
         public static bool TryParse(string s, out double retval)
         {
-            return TryParse(s, out retval, out _);
+            string units;
+            return TryParse(s, out retval, out units);
         }
 
         /// <summary>
@@ -478,7 +479,8 @@ namespace TekHighspeedAPI
         /// <returns>converted value</returns>
         public static double Parse(string s)
         {
-            return TryParse(s, out double retval) ? retval : 0.0;
+            double retval;
+            return TryParse(s, out retval) ? retval : 0.0;
         }
 
         /// <summary>

@@ -399,7 +399,11 @@ namespace TekHighspeedAPI
 
         private void Set(string name, object value)
         {
-            if (!(value is StatisticAccumulation statistics)) return;
+            StatisticAccumulation statistics;
+            if (value is StatisticAccumulation)
+                statistics = value as StatisticAccumulation;
+            else
+                return;
 
             using (_dictionary.WriteLock)
             {
@@ -422,8 +426,8 @@ namespace TekHighspeedAPI
 
         public object this[string name]
         {
-            get => Find(name);
-            set => Set(name, value);
+            get { return Find(name); }
+            set { Set(name, value); }
         }
 
         /// <summary>   Validate that tuple contains the specified key. </summary>
@@ -3055,7 +3059,7 @@ namespace TekHighspeedAPI
                 using (ReadLock)
                 {
                     if (Count > 0) return _buffer[_buffer.Count - 1];
-                    return default;
+                    return default(T);
                 }
             }
         }
@@ -3119,7 +3123,8 @@ namespace TekHighspeedAPI
                     _buffer.RemoveAt(0);
 
                     // Not a great idea in general
-                    if (item is IDisposable disposableItem) disposableItem.Dispose();
+                    if (item is IDisposable )
+                        (item as IDisposable).Dispose();
                 }
             }
         }

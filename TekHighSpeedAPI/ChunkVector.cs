@@ -25,11 +25,20 @@ namespace TekHighspeedAPI
         IDataStatus,
         IHorizontal<T>,
         INormalizedHorizontal
-        where T : unmanaged, IComparable<T>
+        where T : IComparable<T>
     {
+        static ChunkVector()
+        {
+            if (!typeof(T).IsPrimitive && !typeof(T).IsEnum && !Marshal.IsComObject(typeof(T)))
+            {
+                throw new NotSupportedException("Type must be unmanaged.");
+            }
+        }
+
+        public T Value;
         #region Fields
         private List<ReadOnlyMemory<byte>> _list = new List<ReadOnlyMemory<byte>>();
-        private readonly List<MemoryHandle> _memoryHandles = new List<MemoryHandle>();
+        //private readonly List<MemoryHandle> _memoryHandles = new List<MemoryHandle>();
         private readonly Histogram _histogram = new Histogram();
         private bool _disposed = false;
         private readonly int _itemWidth = 0;
@@ -101,6 +110,7 @@ namespace TekHighspeedAPI
             _memoryHandles.Add(item.Pin());
         }
 
+        private readonly List<MemoryHandle> _memoryHandles = new List<MemoryHandle>();
         public T GetAt(long index)
         {
             var chunkIndex = (int) (index / _chunkElementSize);
@@ -110,7 +120,14 @@ namespace TekHighspeedAPI
                 throw new IndexOutOfRangeException();
             unsafe
             {
-                return *(((T*)(_memoryHandles[chunkIndex]).Pointer) + chunkOffset);
+                var pointer = _memoryHandles[chunkIndex].Pointer;
+                IntPtr typedPointer = (IntPtr)pointer; // Convert void* to IntPtr
+
+                var elementSize = Marshal.SizeOf(typeof(T));
+                var byteOffset = chunkOffset * elementSize;
+                var offsetPointer = IntPtr.Add(typedPointer, byteOffset);
+
+                return (T)Marshal.PtrToStructure(offsetPointer, typeof(T));
             }
         }
 
@@ -262,20 +279,20 @@ namespace TekHighspeedAPI
 
         public double Focus
         {
-            get => (Begin - End) / 2.0 + Begin;
-            set => throw new ReadOnlyException();
+            get { return (Begin - End) / 2.0 + Begin; }
+            set { throw new ReadOnlyException(); }
         }
 
         public double Begin
         {
-            get => ((IHorizontal<T>)this).IndexToValue(0);
-            set => throw new ReadOnlyException();
+            get { return ((IHorizontal<T>)this).IndexToValue(0); }
+            set { throw new ReadOnlyException(); }
         }
 
         public double End
         {
-            get => Begin + Count * ((IHorizontal<T>)this).Spacing;
-            set => throw new ReadOnlyException();
+            get { return Begin + Count * ((IHorizontal<T>)this).Spacing; }
+            set { throw new ReadOnlyException(); }
         }
 
         public void CopyTo(double[] array, int arrayIndex)
@@ -291,8 +308,8 @@ namespace TekHighspeedAPI
 
         long INormalizedVectorEx.Count
         {
-            get => _count;
-            set => throw new ReadOnlyException();
+            get { return _count; }
+            set { throw new ReadOnlyException(); }
         }
 
         public int Count => (int) _count;
@@ -301,14 +318,14 @@ namespace TekHighspeedAPI
 
         long INormalizedVector.Count
         {
-            get => _count;
-            set => throw new ReadOnlyException();
+            get { return _count; }
+            set { throw new ReadOnlyException(); }
         }
 
         double INormalizedVector.this[long index]
         {
-            get => Convert.ToDouble(GetAt(index)) * _vertical.Spacing + _vertical.Offset;
-            set => throw new ReadOnlyException();
+            get { return Convert.ToDouble(GetAt(index)) * _vertical.Spacing + _vertical.Offset; }
+            set { throw new ReadOnlyException(); }
         }
 
         double[] INormalizedVector.ToArray()
@@ -435,7 +452,7 @@ namespace TekHighspeedAPI
             try
             {
                 var tPtr = (byte*)dataHandle.AddrOfPinnedObject().ToPointer();
-                var maxSize = Count * sizeof(T);
+                var maxSize = Count * Marshal.SizeOf(typeof(T));
                 Parallel.ForEach(Partitioner.Create(0, _memoryHandles.Count), range =>
                 {
                     for (var index = range.Item1; index < range.Item2; index++)
@@ -468,8 +485,8 @@ namespace TekHighspeedAPI
 
         T IVector<T>.this[long index]
         {
-            get => GetAt(index);
-            set => throw new ReadOnlyException();
+            get { return GetAt(index); }
+            set { throw new ReadOnlyException(); }
         }
 
         public string SourceName { get; set; }

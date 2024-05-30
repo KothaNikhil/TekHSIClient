@@ -228,7 +228,7 @@ namespace TekHighspeedAPI
         /// </summary>
         /// <param name="clientname">name of client.</param>
         /// <returns></returns>
-        (Status, Guid) Connect(string clientname);
+        Tuple<Status, Guid> Connect(string clientname);
 
 
         /// <summary>
@@ -248,26 +248,26 @@ namespace TekHighspeedAPI
         /// 
         /// </summary>
         /// <returns></returns>
-        (Status, byte[]) ReadRawBinary();
+        Tuple<Status, byte[]> ReadRawBinary();
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        (Status, byte[]) Query(string message);
+        Tuple<Status, byte[]> Query(string message);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        (Status, byte[]) QueryBinary(string message);
+        Tuple<Status, byte[]> QueryBinary(string message);
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        (Status, Int32) ReadSTB();
+        Tuple<Status, Int32> ReadSTB();
 
         /// <summary>
         /// 
@@ -278,7 +278,7 @@ namespace TekHighspeedAPI
         /// 
         /// </summary>
         /// <returns></returns>
-        (Status, int) GetTimeout();
+        Tuple<Status, int> GetTimeout();
 
         /// <summary>
         /// 

@@ -162,8 +162,8 @@ namespace TekHighspeedAPI
         /// </summary>
         public UpdateConditionType UpdateCondition
         {
-            get => _updateConditionType;
-            set => _updateConditionType = value;
+            get { return _updateConditionType; }
+            set { _updateConditionType = value; }
         }
 
         /// <summary>
@@ -370,7 +370,10 @@ namespace TekHighspeedAPI
             retval.SourceName = header.Sourcename;
             retval.Horizontal.Units = header.HorizontalUnits;
             retval.Vertical.Units = header.Verticalunits;
-            if (!(retval is IDataStatus ds)) 
+            IDataStatus ds;
+            if (retval is IDataStatus)
+                ds = retval as IDataStatus;
+            else
                 return retval;
             ds.TID = (long)header.Dataid;
             ds.HasData = header.Hasdata;
@@ -398,7 +401,10 @@ namespace TekHighspeedAPI
                 v.SourceName = header.Sourcename;
                 ((INormalizedVector)v).Horizontal.Units = header.HorizontalUnits;
                 ((INormalizedVector)v).Vertical.Units = header.Verticalunits;
-                if (!(v is IDataStatus ds))
+                IDataStatus ds;
+                if (v is IDataStatus)
+                    ds = v as IDataStatus;
+                else
                     return v;
                 ds.TID = (long)header.Dataid;
                 ds.HasData = header.Hasdata;
@@ -455,7 +461,10 @@ namespace TekHighspeedAPI
                 v.SourceName = header.Sourcename;
                 ((INormalizedVector)v).Horizontal.Units = header.HorizontalUnits;
                 ((INormalizedVector)v).Vertical.Units = header.Verticalunits;
-                if (!(v is IDataStatus ds))
+                IDataStatus ds;
+                if (v is IDataStatus)
+                    ds = v as IDataStatus;
+                else
                     return v;
                 ds.TID = (long)header.Dataid;
                 ds.HasData = header.Hasdata;
@@ -510,7 +519,10 @@ namespace TekHighspeedAPI
                 v.SourceName = header.Sourcename;
                 ((INormalizedVector)v).Horizontal.Units = header.HorizontalUnits;
                 ((INormalizedVector)v).Vertical.Units = header.Verticalunits;
-                if (!(v is IDataStatus ds))
+                IDataStatus ds;
+                if (v is IDataStatus)
+                    ds = v as IDataStatus;
+                else
                     return v;
                 ds.TID = (long)header.Dataid;
                 ds.HasData = header.Hasdata;
@@ -625,7 +637,10 @@ namespace TekHighspeedAPI
                 v.SourceName = header.Sourcename;
                 ((INormalizedVector)v).Horizontal.Units = header.HorizontalUnits;
                 ((INormalizedVector)v).Vertical.Units = header.Verticalunits;
-                if (!(v is IDataStatus ds))
+                IDataStatus ds;
+                if (v is IDataStatus)
+                    ds = v as IDataStatus;
+                else
                     return v;
                 ds.TID = (long)header.Dataid;
                 ds.HasData = header.Hasdata;
@@ -679,7 +694,10 @@ namespace TekHighspeedAPI
                 v.SourceName = header.Sourcename;
                 ((INormalizedVector)v).Horizontal.Units = header.HorizontalUnits;
                 ((INormalizedVector)v).Vertical.Units = header.Verticalunits;
-                if (!(v is IDataStatus ds))
+                IDataStatus ds;
+                if (v is IDataStatus)
+                    ds = v as IDataStatus;
+                else
                     return v;
                 //if (v is not IDataStatus ds) return v;
                 ds.TID = (long)header.Dataid;
@@ -1166,16 +1184,24 @@ namespace TekHighspeedAPI
         {
             try
             {
-                switch (o)
+                if (o is ChunkVector<sbyte>)
                 {
-                    case ChunkVector<sbyte> v8:
-                        return v8.Count;
-                    case ChunkVector<Int16> v16:
-                        return v16.Count * 2;
-                    case ChunkVector<float> vf:
-                        return vf.Count * 4;
-                    default:
-                        return 0;
+                    var v8 = o as ChunkVector<sbyte>;
+                    return v8.Count;
+                }
+                else if (o is ChunkVector<Int16>)
+                {
+                    var v16 = o as ChunkVector<Int16>;
+                    return v16.Count * 2;
+                }
+                else if (o is ChunkVector<float>)
+                {
+                    var vf = o as ChunkVector<float>;
+                    return vf.Count * 4;
+                }
+                else
+                {
+                    return 0;
                 }
             }
             catch

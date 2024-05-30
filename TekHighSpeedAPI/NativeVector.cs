@@ -27,8 +27,8 @@ namespace TekHighspeedAPI
 
         public double Spacing
         {
-            get => Increment;
-            set => Increment = value;
+            get { return Increment; }
+            set { Increment = value; }
         }
 
         public long PrechargeCount { get; set; }
@@ -73,13 +73,13 @@ namespace TekHighspeedAPI
 
         public long PrechargeCount
         {
-            get => 0;
+            get { return 0; }
             set { }
         }
 
         public long PostchargeCount
         {
-            get => 0;
+            get { return 0; }
             set { }
         }
 
@@ -99,7 +99,7 @@ namespace TekHighspeedAPI
 
         public long Count
         {
-            get => _count;
+            get { return _count; }
             set
             {
                 if (((IntPtr)_data) == IntPtr.Zero)
@@ -117,14 +117,14 @@ namespace TekHighspeedAPI
 
         public double this[long index]
         {
-            get => _vertical.IndexToValue(_data[index]);
-            set => _data[index] = (sbyte)_vertical.ValueToIndex(value);
+            get { return _vertical.IndexToValue(_data[index]); }
+            set { _data[index] = (sbyte)_vertical.ValueToIndex(value); }
         }
 
         sbyte INativeVector<sbyte>.this[long index]
         {
-            get => _data[index];
-            set => _data[index] = value;
+            get { return _data[index]; }
+            set { _data[index] = value; }
         }
 
         public double[] ToArray()
@@ -164,8 +164,8 @@ namespace TekHighspeedAPI
 
         double INormalizedVector.this[long index]
         {
-            get => _vertical.IndexToValue(_data[index]);
-            set => _data[index] = (sbyte)_vertical.ValueToIndex(value);
+            get { return _vertical.IndexToValue(_data[index]); }
+            set { _data[index] = (sbyte)_vertical.ValueToIndex(value); }
         }
 
         public string SourceName { get; set; }
@@ -283,13 +283,13 @@ namespace TekHighspeedAPI
 
         public long PrechargeCount
         {
-            get => 0;
+            get { return 0; }
             set { }
         }
 
         public long PostchargeCount
         {
-            get => 0;
+            get { return 0; }
             set { }
         }
 
@@ -309,7 +309,7 @@ namespace TekHighspeedAPI
 
         public long Count
         {
-            get => _count;
+            get { return _count; }
             set
             {
                 if (((IntPtr)_data) == IntPtr.Zero)
@@ -327,15 +327,15 @@ namespace TekHighspeedAPI
 
         float INativeVector<float>.this[long index]
         {
-            get => _data[index];
-            set => _data[index] = value;
+            get { return _data[index]; }
+            set { _data[index] = value; }
         }
 
 
         public double this[long index]
         {
-            get => _data[index];
-            set => _data[index] = (float) value;
+            get { return _data[index]; }
+            set { _data[index] = (float)value; }
         }
 
         public double[] ToArray()
@@ -360,8 +360,8 @@ namespace TekHighspeedAPI
 
         double INormalizedVector.this[long index]
         {
-            get => _vertical.IndexToValue(_data[index]);
-            set => _data[index] = (sbyte)_vertical.ValueToIndex(value);
+            get { return _vertical.IndexToValue(_data[index]); }
+            set { _data[index] = (sbyte)_vertical.ValueToIndex(value); }
         }
 
         public string SourceName { get; set; }

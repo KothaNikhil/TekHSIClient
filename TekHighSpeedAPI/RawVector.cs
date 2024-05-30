@@ -221,20 +221,20 @@ namespace TekHighspeedAPI
 
         public double Focus
         {
-            get => (Begin - End) / 2.0 + Begin;
-            set => throw new ReadOnlyException();
+            get { return (Begin - End) / 2.0 + Begin; }
+            set { throw new ReadOnlyException(); }
         }
 
         public double Begin
         {
-            get => ((IHorizontal<T>)this).IndexToValue(0);
-            set => throw new ReadOnlyException();
+            get { return ((IHorizontal<T>)this).IndexToValue(0); }
+            set { throw new ReadOnlyException(); }
         }
 
         public double End
         {
-            get => Begin + Count * ((IHorizontal<T>)this).Spacing;
-            set => throw new ReadOnlyException();
+            get { return Begin + Count * ((IHorizontal<T>)this).Spacing; }
+            set { throw new ReadOnlyException(); }
         }
 
         public void CopyTo(double[] array, int arrayIndex)
@@ -250,8 +250,8 @@ namespace TekHighspeedAPI
 
         long INormalizedVectorEx.Count
         {
-            get => _array.Length;
-            set => throw new ReadOnlyException();
+            get { return _array.Length; }
+            set { throw new ReadOnlyException(); }
         }
 
         public int Count => _array.Length;
@@ -260,14 +260,14 @@ namespace TekHighspeedAPI
 
         long INormalizedVector.Count
         {
-            get => _array.Length;
-            set => throw new ReadOnlyException();
+            get { return _array.Length; }
+            set { throw new ReadOnlyException(); }
         }
 
         double INormalizedVector.this[long index]
         {
-            get => Convert.ToDouble(_array[index]) * _vertical.Spacing + _vertical.Offset;
-            set => throw new ReadOnlyException();
+            get { return Convert.ToDouble(_array[index]) * _vertical.Spacing + _vertical.Offset; }
+            set { throw new ReadOnlyException(); }
         }
 
         double[] INormalizedVector.ToArray()
@@ -374,8 +374,8 @@ namespace TekHighspeedAPI
 
         T IVector<T>.this[long index]
         {
-            get => _array[index];
-            set => throw new ReadOnlyException();
+            get { return _array[index]; }
+            set { throw new ReadOnlyException(); }
         }
 
         public string SourceName { get; set; }
