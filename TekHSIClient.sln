@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34902.97
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TekVisaIO", "TekVisaIO\TekVisaIO.csproj", "{6713277E-200B-4827-89F3-43AC7953541E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TekHighSpeedAPI", "TekHighSpeedAPI\TekHighSpeedAPI.csproj", "{CB9540CC-8286-4E70-A6E1-6687BF3EA32C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plot", "Plot\Plot.csproj", "{01C0BBFD-D6C8-47F6-B0F1-06EBE652E28E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisaAndHSIwrapper", "VisaAndHSIwrapper\VisaAndHSIwrapper.csproj", "{CCFF316A-E544-4F16-9D63-41A10BB525FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6713277E-200B-4827-89F3-43AC7953541E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6713277E-200B-4827-89F3-43AC7953541E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6713277E-200B-4827-89F3-43AC7953541E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6713277E-200B-4827-89F3-43AC7953541E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB9540CC-8286-4E70-A6E1-6687BF3EA32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB9540CC-8286-4E70-A6E1-6687BF3EA32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB9540CC-8286-4E70-A6E1-6687BF3EA32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB9540CC-8286-4E70-A6E1-6687BF3EA32C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01C0BBFD-D6C8-47F6-B0F1-06EBE652E28E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01C0BBFD-D6C8-47F6-B0F1-06EBE652E28E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01C0BBFD-D6C8-47F6-B0F1-06EBE652E28E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01C0BBFD-D6C8-47F6-B0F1-06EBE652E28E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCFF316A-E544-4F16-9D63-41A10BB525FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCFF316A-E544-4F16-9D63-41A10BB525FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCFF316A-E544-4F16-9D63-41A10BB525FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCFF316A-E544-4F16-9D63-41A10BB525FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1183D7F9-60A9-4B03-A9FC-DCA39AE716E5}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,309 @@
+syntax = "proto3";
+
+package Tekscope;
+
+service Connect {
+  // Connect to instrument
+  rpc Connect (ConnectRequest) returns (ConnectReply) {}
+
+  // Disconnect from instrument
+  rpc Disconnect (ConnectRequest) returns (ConnectReply) {}
+
+  // Force new sequence. This requests access to data.
+  rpc RequestNewSequence (ConnectRequest) returns (ConnectReply) {}
+
+  // Returns a list of names of available data
+  rpc RequestAvailableNames (ConnectRequest) returns (AvailableNamesReply) {}
+
+  // Waits for client access to data. When it returns you may access NormalizedData or NativeData.
+  rpc WaitForDataAccess (ConnectRequest) returns (ConnectReply) {}
+
+  // Releases access to data (must occur after WaitForDataAccess)
+  rpc FinishedWithDataAccess (ConnectRequest) returns (ConnectReply) {}
+}
+
+message ConnectRequest {
+ string name = 1;
+}
+
+enum ConnectStatus {
+    CONNECTSTATUS_UNSPECIFIED = 0;                  // No status returned
+    CONNECTSTATUS_SUCCESS = 1;                      // Request succeeded
+    CONNECTSTATUS_NOT_CONNECTED_FAILURE = 2;        // Disconnected when not Connected
+    CONNECTSTATUS_OUTSIDE_SEQUENCE_FAILURE = 3;     // FinishedWithDataAccess when no WaitForDataAccess 
+    CONNECTSTATUS_TIMEOUT_FAILURE = 4;              // Timeout occurred before completion of action
+    CONNECTSTATUS_INUSE_FAILURE = 5;                // Existing Connection (only one allowed at a time)
+    CONNECTSTATUS_UNKNOWN_FAILURE = 6;              // Request failed but the failure mode is not known
+}
+
+message ConnectReply {
+    ConnectStatus status = 1;
+}
+
+message AvailableNamesReply {
+	ConnectStatus status = 1;
+	repeated string symbolnames = 2;
+}
+
+// Normalized Waveform (this is fully defined)
+service NormalizedData {
+  rpc GetWaveform (WaveformRequest) returns (stream NormalizedReply) {}
+  rpc GetHeader (WaveformRequest) returns (NormalizedReply) {}
+}
+
+// Returns internal data (which is smaller)
+// However it comes in a byte stream that must be interpreted 
+// by the client based on the header definition.
+service NativeData {
+    // Query Waveform Samples
+	rpc GetWaveform (WaveformRequest) returns (stream RawReply) {}
+    // Query Header information (needed to interpret samples)
+	rpc GetHeader (WaveformRequest) returns (RawReply) {}
+}
+
+// The request message containing the client's name.
+message WaveformRequest {
+ string sourcename = 1;
+ uint32 chunksize = 2;
+}
+
+// Status Response from reply
+enum WfmReplyStatus
+{
+    // Unknown Status
+    WFMREPLYSTATUS_UNSPECIFIED = 0;
+    // Operation Succeeded
+    WFMREPLYSTATUS_SUCCESS = 1;
+    // Source name missing in Request or not matching
+    // name was found
+    WFMREPLYSTATUS_SOURCENAME_MISSING_FAILURE = 2;
+    // Requested waveform when out of sequence.
+    // In sequence is between a successful WaitForDataAccess 
+    // and FinishedWithDataAccess.
+    WFMREPLYSTATUS_OUTSIDE_SEQUENCE_FAILURE = 3;
+    // Request when no connected service
+    WFMREPLYSTATUS_NO_CONNECTION_FAILURE = 4;
+    // A name defined that exists but its not compatible
+    // with the service. For example, a digital request was made
+    // on an analog waveform.
+    WFMREPLYSTATUS_TYPE_MISMATCH_FAILURE = 5;
+}
+
+// Defines whether waveform is made of pairs
+enum WfmPairType
+{
+    // Unspecified
+    WFMPAIRTYPE_UNSPECIFIED = 0;
+    // Not paired
+    WFMPAIRTYPE_NONE = 1;
+    // Paired
+    WFMPAIRTYPE_PAIR = 2;
+}
+
+enum WfmType 
+{
+    WFMTYPE_UNSPECIFIED = 0;
+    WFMTYPE_ANALOG_8 = 1;
+    WFMTYPE_ANALOG_16 = 2;
+    WFMTYPE_ANALOG_FLOAT = 3;
+    WFMTYPE_DIGITAL_8 = 4;
+    WFMTYPE_DIGITAL_16 = 5;
+    WFMTYPE_ANALOG_16_IQ = 6;
+    WFMTYPE_ANALOG_32_IQ = 7;
+}
+
+// Header used for Normalized, Native, and Digital Waveforms
+message WaveformHeader {
+    // Name of source (eg. Ch1, D4, M2)
+	string sourcename = 1;
+    // Native - 1 (8 bit), 2 (16 bit), 4 (float)
+    // Digital - 1 (8 bit), 2 (16 bit)
+	uint32 sourcewidth = 2;
+    // Unique ID for the data
+	uint64 dataid = 3;
+    // Unique ID for the transaction (instrument state)
+	uint64 transid = 4;
+    // Horizontal Units as a string
+    string horizontalUnits = 5;
+    // Time between samples
+	double horizontalspacing = 6;
+    // Sample location of zero time
+	double horizontalzeroindex = 7;
+    // Additional percent of time to add to get exact index of 0 time.
+	double horizontalfractionalzeroindex = 8;
+    // Number of elements in waveform
+	uint64 noofsamples = 9;
+	// Chunksize - chunksized used by stream
+	uint32 chunksize = 10;
+    // Defines the type of the waveform
+    WfmType wfmtype = 11;
+    // Digital Mask defined bits used (1 means used)
+    uint32 bitmask = 12;
+    // Defined whether waveform is paired (like minmax, or IQ)
+	WfmPairType pairtype = 13;
+    // Vertical units as a string
+    string verticalunits = 14;
+    // Only used on Native waveforms.
+	double verticalspacing = 15;
+    // Only used on Native waveform.
+	double verticaloffset = 16;
+    //Only used with IQ data
+    double iq_centerFrequency = 17;
+    //Only used with IQ data
+    double iq_fftLength = 18;
+    //Only used with IQ data
+    double iq_rbw = 19;
+    //Only used with IQ data
+    double iq_span = 20;
+    //Only used with IQ data
+    string iq_windowType = 21;
+    // true of item contains data (this is because terminator predefines all symbols even if they are not used)
+    bool hasdata = 22;
+}
+
+// The response message containing the NormalizedVector
+message NormalizedReply {
+    message WaveformSampleChunk {
+          repeated float data = 1 [packed=true];         
+    }
+
+    message DataOrHeaderAccess {
+	    oneof value {
+		    WaveformHeader header = 1;
+		    WaveformSampleChunk chunk = 2;
+	    }
+    } 
+
+    WfmReplyStatus status = 1;
+    DataOrHeaderAccess headerordata = 2;
+}
+
+// This reply supports both Native and Digital types
+// Native supports 8, 16, IQ, and float
+// Digital (8/16 bit)
+message RawReply {
+    message WaveformSampleByteChunk {
+          bytes data = 1;         
+    }
+
+    message DataOrHeaderAccess {
+	    oneof value {
+		    WaveformHeader header = 1;
+		    WaveformSampleByteChunk chunk = 2;
+	    }
+    } 
+
+    WfmReplyStatus status = 1;
+    DataOrHeaderAccess headerordata = 2;
+}
+
+// Minimalist SCPI command/control API. 
+service SCPIControl {
+    rpc Connect(SCPIConnectRequest) returns (SCPIConnectResponse) {}
+    rpc Disconnect(SCPIDisconnectRequest) returns (SCPIStatusResponse) {}
+    rpc Write(SCPIWriteRequest) returns (SCPIStatusResponse) {}
+
+    rpc Query(SCPIQueryRequest) returns (stream SCPIReadResponse) {}
+    rpc Read(SCPIReadRequest) returns (stream SCPIReadResponse) {}
+
+    rpc ReadSTB(SCPIReadSTBRequest) returns (SCPISTBReadResponse) {}
+    //rpc SetTimeout(SCPITimeoutSetRequest) returns (SCPIStatusResponse) {}
+    //rpc GetTimeout(SCPITimeoutGetRequest) returns (SCPITimeoutGetResponse) {}
+    //rpc Lock(SCPILockRequest) returns (SCPIStatusResponse) {}
+    //rpc Unlock(SCPIUnlockRequest) returns (SCPIStatusResponse) {}
+    rpc Clear(SCPIClearRequest) returns (SCPIStatusResponse) {}
+}
+
+message SCPITimeoutSetRequest
+{
+    string ID = 1;
+    int32 Timeout = 2;
+}
+
+message SCPITimeoutGetRequest
+{
+    string ID = 1;
+}
+
+message SCPILockRequest
+{
+    string ID = 1;
+    uint32 Timeout = 2;
+}
+
+message SCPIUnlockRequest
+{
+    string ID = 1;
+}
+
+message SCPIClearRequest
+{
+    string ID = 1;
+}
+
+message SCPITimeoutGetResponse
+{
+    int32 status = 1;
+    int32 Timeout = 2;
+}
+
+message SCPIStatusResponse
+{
+    int32 status = 1;
+}
+
+message SCPIConnectRequest
+{
+    string clientname = 1;
+}
+
+message SCPIDisconnectRequest
+{
+    string ID = 1;
+}
+
+message SCPIConnectResponse
+{
+    string ID = 1;
+}
+
+message SCPIReadRequest
+{
+    string ID = 1;
+    int32 chunksize = 2;
+}
+
+// Write message (SCPI message)
+message SCPIWriteRequest
+{
+    string ID = 1;
+    bytes message = 2;
+}
+
+// Write message (SCPI message)
+message SCPIQueryRequest
+{
+    string ID = 1;
+    int32 chunksize = 2;
+    bytes message = 3;
+}
+
+// 
+message SCPIReadSTBRequest
+{
+    string ID = 1;
+}
+
+message SCPISTBReadResponse
+{
+    int32 status = 1;
+    int32 response = 2;
+}
+
+message SCPIReadResponse
+{
+    int32 status = 1;
+    int64 totalsize = 2;
+    int32 response_size = 3;
+    bytes response = 4;
+}
