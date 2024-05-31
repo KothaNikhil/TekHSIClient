@@ -32,6 +32,7 @@ namespace VisaAndHSIwrapper
                 if (hsiClient == null) return false;
                 connected_ip = ip;
                 SubscribeToDataAccess();
+                StartCapturingData();
                 return true;
             }
             catch
@@ -52,8 +53,6 @@ namespace VisaAndHSIwrapper
 
         private void DataAccess(HSIClient hsi, CancellationToken tok, IEnumerable<object> data, double updateTime)
         {
-            hsiClient.DataAccess -= DataAccess;
-
             List<INormalizedVector> wfms = new List<INormalizedVector>();
             foreach (var datum in data.OrderBy(x => ((Tek.Scope.Support.INormalizedVector)x).SourceName))
             {

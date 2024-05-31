@@ -46,7 +46,7 @@ namespace Plot
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(195, 13);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(370, 35);
             this.textBox1.TabIndex = 1;
@@ -55,7 +55,7 @@ namespace Plot
             // zedGraphControl1
             // 
             this.zedGraphControl1.Location = new System.Drawing.Point(19, 136);
-            this.zedGraphControl1.Margin = new System.Windows.Forms.Padding(16, 16, 16, 16);
+            this.zedGraphControl1.Margin = new System.Windows.Forms.Padding(16);
             this.zedGraphControl1.Name = "zedGraphControl1";
             this.zedGraphControl1.ScrollGrace = 0D;
             this.zedGraphControl1.ScrollMaxX = 0D;
@@ -64,14 +64,14 @@ namespace Plot
             this.zedGraphControl1.ScrollMinX = 0D;
             this.zedGraphControl1.ScrollMinY = 0D;
             this.zedGraphControl1.ScrollMinY2 = 0D;
-            this.zedGraphControl1.Size = new System.Drawing.Size(1916, 953);
+            this.zedGraphControl1.Size = new System.Drawing.Size(1253, 953);
             this.zedGraphControl1.TabIndex = 2;
             this.zedGraphControl1.UseExtendedPrintDialog = true;
             // 
             // buttonRun
             // 
             this.buttonRun.Location = new System.Drawing.Point(1608, 9);
-            this.buttonRun.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonRun.Margin = new System.Windows.Forms.Padding(2);
             this.buttonRun.Name = "buttonRun";
             this.buttonRun.Size = new System.Drawing.Size(149, 49);
             this.buttonRun.TabIndex = 3;
@@ -82,7 +82,7 @@ namespace Plot
             // buttonClear
             // 
             this.buttonClear.Location = new System.Drawing.Point(1430, 9);
-            this.buttonClear.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonClear.Margin = new System.Windows.Forms.Padding(2);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(149, 49);
             this.buttonClear.TabIndex = 4;
@@ -93,7 +93,7 @@ namespace Plot
             // buttonStop
             // 
             this.buttonStop.Location = new System.Drawing.Point(1785, 9);
-            this.buttonStop.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.buttonStop.Margin = new System.Windows.Forms.Padding(2);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(149, 49);
             this.buttonStop.TabIndex = 5;
@@ -124,7 +124,7 @@ namespace Plot
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(738, 14);
-            this.textBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(2);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(370, 35);
             this.textBox2.TabIndex = 8;
@@ -135,9 +135,9 @@ namespace Plot
             this.textBox3.Location = new System.Drawing.Point(195, 83);
             this.textBox3.Margin = new System.Windows.Forms.Padding(2);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(370, 35);
+            this.textBox3.Size = new System.Drawing.Size(453, 35);
             this.textBox3.TabIndex = 9;
-            this.textBox3.Text = "GPIB8::1::INSTR";
+            this.textBox3.Text = "USB::0X0699::0X0528::B011090::INSTR";
             // 
             // label3
             // 
@@ -151,7 +151,7 @@ namespace Plot
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(1948, 136);
+            this.textBox4.Location = new System.Drawing.Point(1291, 136);
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(690, 953);
@@ -161,7 +161,7 @@ namespace Plot
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2650, 1117);
+            this.ClientSize = new System.Drawing.Size(2014, 1117);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox3);
@@ -173,7 +173,7 @@ namespace Plot
             this.Controls.Add(this.buttonRun);
             this.Controls.Add(this.zedGraphControl1);
             this.Controls.Add(this.textBox1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);

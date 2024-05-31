@@ -35,9 +35,6 @@ namespace Plot
         {
             InitializeComponent();
 
-            tekHSIwrapper.DataAvaialble += TekHSIwrapper_DataAvaialble;
-            tekVisaWrapper.StatusMessageUpdated += TekVisaWrapper_StatusMessageUpdated;
-
             graphPane = zedGraphControl1.GraphPane;
             graphPane.Title.Text = "Plot";
             graphPane.XAxis.Title.Text = "X Axis";
@@ -65,7 +62,7 @@ namespace Plot
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            tekHSIwrapper.Dispose();
+            tekHSIwrapper?.Dispose();
             base.OnClosed(e);
         }
 
@@ -90,9 +87,20 @@ namespace Plot
             string[] channels = textBox2.Text.Split(',');
             string visaAddress = textBox3.Text;
             tekHSIwrapper = new TekHSIwrapper();
-            tekVisaWrapper = new TekVisaWrapper();
+            tekHSIwrapper.DataAvaialble += TekHSIwrapper_DataAvaialble;
             bool isConnectedToHSI = tekHSIwrapper.Connect(ip, channels);
             textBox4.AppendText("Connected to HSI: " + isConnectedToHSI + '\n');
+            //if (isConnectedToHSI)
+            //{
+            //    //tekHSIwrapper.StartCapturingData();
+            //}
+            //InitializeTekVisaConnections(channels, visaAddress);
+        }
+
+        private void InitializeTekVisaConnections(string[] channels, string visaAddress)
+        {
+            tekVisaWrapper = new TekVisaWrapper();
+            tekVisaWrapper.StatusMessageUpdated += TekVisaWrapper_StatusMessageUpdated;
             bool isConnectToVisa = tekVisaWrapper.Connect(visaAddress);
             if (!isConnectToVisa)
             {
@@ -103,10 +111,6 @@ namespace Plot
             tekVisaWrapper.TurnOnChannels(channels);
             tekVisaWrapper.SetScopeParams();
             tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
-            if (isConnectedToHSI)
-            {
-                tekHSIwrapper.StartCapturingData();
-            }
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
@@ -121,13 +125,22 @@ namespace Plot
 
         private void TekHSIwrapper_DataAvaialble(object sender, EventArgs e)
         {
+            BeginInvoke(new Action(() => { UpdateGraph(sender); }));
+            
+        }
+
+        private void UpdateGraph(object sender)
+        {
             var wfms = sender as List<INormalizedVector>;
             int color = 0;
             foreach (INormalizedVector wfm in wfms)
             {
                 ClearGraph();
 
-                textBox4.AppendText(wfm.SourceName + ": " + wfm.Count + '\n');
+                if (InvokeRequired)
+                    BeginInvoke(new Action(() => textBox4.AppendText(wfm.SourceName + ": " + wfm.Count + '\n')));
+                else
+                    textBox4.AppendText(wfm.SourceName + ": " + wfm.Count + '\n');
                 int n = Convert.ToInt32(wfm.Count); // Replace with your desired value of n
                 double[] dataX = Enumerable.Range(0, n).Select(x => (double)x).ToArray();
 
@@ -140,13 +153,13 @@ namespace Plot
                 zedGraphControl1.AxisChange();
                 zedGraphControl1.Invalidate();
             }
-            if(rlenIndex >= rlens.Length)
+            if (rlenIndex >= rlens.Length)
             {
                 tekHSIwrapper.Dispose();
-                tekVisaWrapper.Dispose();
+                tekVisaWrapper?.Dispose();
                 return;
             }
-            tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
+            tekVisaWrapper?.SetRlen(rlens[rlenIndex++]);
             tekHSIwrapper.SubscribeToDataAccess();
         }
 
