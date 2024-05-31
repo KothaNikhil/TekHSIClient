@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using ZedGraph;
-using System.Diagnostics;
-using VisaAndHSIwrapper;
 using Tek.Scope.Support;
 using TekHighspeedAPI;
-using System.Threading;
+using VisaAndHSIwrapper;
+using ZedGraph;
 
 namespace Plot
 {
-    public partial class Form1 : Form
+    public partial class GUIForm : Form
     {
         HSIClient hsiClient = null;
         private string ip = "";
@@ -34,7 +36,7 @@ namespace Plot
         /// <summary>
         /// 
         /// </summary>
-        public Form1()
+        public GUIForm()
         {
             InitializeComponent();
 
@@ -42,7 +44,7 @@ namespace Plot
             graphPane.Title.Text = "Plot";
             graphPane.XAxis.Title.Text = "X Axis";
             graphPane.YAxis.Title.Text = "Y Axis";
-            ip = textBox1.Text;
+            ip = ipTextBox.Text;
         }
 
         private void TekVisaWrapper_StatusMessageUpdated(object sender, EventArgs e)
@@ -56,7 +58,7 @@ namespace Plot
 
         private void LogMsg(string msg)
         {
-            textBox4.AppendText(msg + '\n');
+            LogTextBox.AppendText(msg + '\n');
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace Plot
         /// <param name="e"></param>
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            ip = textBox1.Text;
+            ip = ipTextBox.Text;
         }
 
         /// <summary>
@@ -87,8 +89,8 @@ namespace Plot
         private void buttonRun_Click(object sender, EventArgs e)
         {
             if (string.Compare(ip, connected_ip, StringComparison.CurrentCultureIgnoreCase) == 0) return;
-            string[] channels = textBox2.Text.Split(',');
-            string visaAddress = textBox3.Text;
+            string[] channels = channelsTextBox.Text.Split(',');
+            string visaAddress = visaAddTextBox.Text;
             hsiClient?.Dispose();
             try
             {
@@ -105,7 +107,7 @@ namespace Plot
 
         private void HsiClient_DataAccess(HSIClient hsi, CancellationToken tok, IEnumerable<object> data, double updateTime)
         {
-            BeginInvoke(new Action(() => 
+            BeginInvoke(new Action(() =>
             {
                 ClearGraph();
                 List<INormalizedVector> wfms = new List<INormalizedVector>();
@@ -143,7 +145,7 @@ namespace Plot
                 //tekHSIwrapper.Dispose();
                 return;
             }
-            textBox4.AppendText("Connected to visa: " + isConnectToVisa + '\n');
+            LogTextBox.AppendText("Connected to visa: " + isConnectToVisa + '\n');
             tekVisaWrapper.TurnOnChannels(channels);
             tekVisaWrapper.SetScopeParams();
             tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
