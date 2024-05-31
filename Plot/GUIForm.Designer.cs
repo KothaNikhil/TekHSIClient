@@ -29,7 +29,6 @@ namespace Plot
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonStop = new System.Windows.Forms.Button();
@@ -41,7 +40,6 @@ namespace Plot
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.ipTextBox = new System.Windows.Forms.TextBox();
-            this.zedGraphControl1 = new ZedGraph.ZedGraphControl();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -160,28 +158,10 @@ namespace Plot
             this.ipTextBox.Text = "134.64.244.152";
             this.ipTextBox.TextChanged += new System.EventHandler(this.ipTextBox_TextChanged);
             // 
-            // zedGraphControl1
-            // 
-            this.zedGraphControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zedGraphControl1.Location = new System.Drawing.Point(0, 97);
-            this.zedGraphControl1.Margin = new System.Windows.Forms.Padding(7);
-            this.zedGraphControl1.Name = "zedGraphControl1";
-            this.zedGraphControl1.ScrollGrace = 0D;
-            this.zedGraphControl1.ScrollMaxX = 0D;
-            this.zedGraphControl1.ScrollMaxY = 0D;
-            this.zedGraphControl1.ScrollMaxY2 = 0D;
-            this.zedGraphControl1.ScrollMinX = 0D;
-            this.zedGraphControl1.ScrollMinY = 0D;
-            this.zedGraphControl1.ScrollMinY2 = 0D;
-            this.zedGraphControl1.Size = new System.Drawing.Size(502, 353);
-            this.zedGraphControl1.TabIndex = 14;
-            this.zedGraphControl1.UseExtendedPrintDialog = true;
-            // 
             // GUIForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.zedGraphControl1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.LogTextBox);
             this.Name = "GUIForm";
@@ -197,7 +177,6 @@ namespace Plot
 
         private System.Windows.Forms.TextBox LogTextBox;
         private System.Windows.Forms.Panel panel1;
-        private ZedGraph.ZedGraphControl zedGraphControl1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox visaAddTextBox;
         private System.Windows.Forms.TextBox channelsTextBox;

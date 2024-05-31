@@ -13,7 +13,9 @@ using System.Windows.Forms;
 using Tek.Scope.Support;
 using TekHighspeedAPI;
 using VisaAndHSIwrapper;
-using ZedGraph;
+using OxyPlot;
+using OxyPlot.Series;
+using OxyPlot.WindowsForms;
 
 namespace Plot
 {
@@ -22,9 +24,9 @@ namespace Plot
         HSIClient hsiClient = null;
         private string ip = "";
         private string connected_ip = "-";
-        //TekHSIwrapper tekHSIwrapper = null;
         TekVisaWrapper tekVisaWrapper = null;
-        private readonly GraphPane graphPane;
+        PlotModel model = new PlotModel { Title = "Example" };
+        LineSeries lineSeries = new LineSeries { Title = "Data", Color = OxyColors.Blue };
 
         string[] rlens = new string[] {"1000","2000","5000","10000","20000","50000",
                 "100000","200000","500000","1000000","2000000", "5000000","10000000", "20000000", "50000000"};
@@ -42,10 +44,6 @@ namespace Plot
         {
             InitializeComponent();
 
-            graphPane = zedGraphControl1.GraphPane;
-            graphPane.Title.Text = "Plot";
-            graphPane.XAxis.Title.Text = "X Axis";
-            graphPane.YAxis.Title.Text = "Y Axis";
             ip = ipTextBox.Text;
         }
 
@@ -140,6 +138,23 @@ namespace Plot
 
                     var dataY = wfm.ToArray();
 
+                    for (int i = 0; i < dataX.Length; i++)
+                    {
+                        lineSeries.Points.Add(new DataPoint(dataX[i], dataY[i]));
+                    }
+
+                    model.Series.Add(lineSeries);
+
+                    // Create a PlotView and assign the model
+                    var plotView = new PlotView
+                    {
+                        Model = model,
+                        Dock = DockStyle.Fill
+                    };
+
+                    // Add PlotView to your form or control
+                    this.Controls.Add(plotView);
+
                     //LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, dataY, color: Colors[0]);
 
                     //graphPane.XAxis.Scale.Min = 0; // Minimum value
@@ -186,13 +201,7 @@ namespace Plot
 
         private void ClearGraph()
         {
-            // Clear the GraphPane
-            graphPane.CurveList.Clear();
-            graphPane.GraphObjList.Clear();
-
-            // Refresh the plot
-            zedGraphControl1.AxisChange();
-            zedGraphControl1.Invalidate();
+            
         }
 
         private void ipTextBox_TextChanged(object sender, EventArgs e)
