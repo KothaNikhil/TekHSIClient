@@ -47,16 +47,16 @@ namespace Plot
 
         private void TekVisaWrapper_StatusMessageUpdated(object sender, EventArgs e)
         {
+            string msg = sender as string;
             if (InvokeRequired)
-            {
-                BeginInvoke(new Action(() => {
-                    textBox4.AppendText((sender as string) + '\n');
-                }));
-            }
+                BeginInvoke(new Action(() => { LogMsg(msg); }));
             else
-            {
-                textBox4.AppendText((sender as string) + '\n');
-            }
+                LogMsg(msg);
+        }
+
+        private void LogMsg(string msg)
+        {
+            textBox4.AppendText(msg + '\n');
         }
 
         /// <summary>
@@ -107,6 +107,7 @@ namespace Plot
         {
             BeginInvoke(new Action(() => 
             {
+                ClearGraph();
                 List<INormalizedVector> wfms = new List<INormalizedVector>();
                 foreach (var datum in data.OrderBy(x => ((Tek.Scope.Support.INormalizedVector)x).SourceName))
                 {
@@ -156,47 +157,6 @@ namespace Plot
         private void buttonStop_Click(object sender, EventArgs e)
         {
             hsiClient?.Dispose();
-            //tekHSIwrapper.Dispose();
-        }
-
-        private void TekHSIwrapper_DataAvaialble(object sender, EventArgs e)
-        {
-            BeginInvoke(new Action(() => { UpdateGraph(sender); }));
-            
-        }
-
-        private void UpdateGraph(object sender)
-        {
-            var wfms = sender as List<INormalizedVector>;
-            int color = 0;
-            foreach (INormalizedVector wfm in wfms)
-            {
-                ClearGraph();
-
-                if (InvokeRequired)
-                    BeginInvoke(new Action(() => textBox4.AppendText(wfm.SourceName + ": " + wfm.Count + '\n')));
-                else
-                    textBox4.AppendText(wfm.SourceName + ": " + wfm.Count + '\n');
-                int n = Convert.ToInt32(wfm.Count); // Replace with your desired value of n
-                double[] dataX = Enumerable.Range(0, n).Select(x => (double)x).ToArray();
-
-                LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, wfm.ToArray(), color: Colors[color++]);
-
-                // Set the x-axis scale
-                graphPane.XAxis.Scale.Min = 0; // Minimum value
-                graphPane.XAxis.Scale.Max = wfm.Count; // Maximum value
-
-                zedGraphControl1.AxisChange();
-                zedGraphControl1.Invalidate();
-            }
-            //if (rlenIndex >= rlens.Length)
-            //{
-            //    //tekHSIwrapper.Dispose();
-            //    tekVisaWrapper?.Dispose();
-            //    return;
-            //}
-            //tekVisaWrapper?.SetRlen(rlens[rlenIndex++]);
-            //tekHSIwrapper.SubscribeToDataAccess();
         }
 
         private void ClearGraph()
