@@ -25,11 +25,9 @@ namespace Plot
         private string ip = "";
         private string connected_ip = "-";
         TekVisaWrapper tekVisaWrapper = null;
-        PlotModel model = new PlotModel { Title = "Example" };
-        LineSeries lineSeries = new LineSeries { Title = "Data", Color = OxyColors.Blue };
 
         string[] rlens = new string[] {"1000","2000","5000","10000","20000","50000",
-                "100000","200000","500000","1000000","2000000", "5000000","10000000", "20000000", "50000000"};
+                "100000","200000","500000","1000000","2000000", "5000000","10000000", "1000" };//, "20000000", "50000000"};
         int rlenIndex = 0;
 
         static readonly Color[] Colors = {
@@ -138,10 +136,16 @@ namespace Plot
 
                     var dataY = wfm.ToArray();
 
-                    for (int i = 0; i < dataX.Length; i++)
+                    PlotModel model = new PlotModel { Title = "Example" };
+                    LineSeries lineSeries = new LineSeries { Title = "Data", Color = OxyColors.Blue };
+                    DataPoint[] dataPoints = new DataPoint[n];
+                    for (int i = 0; i < n; i++)
                     {
-                        lineSeries.Points.Add(new DataPoint(dataX[i], dataY[i]));
+                        dataPoints[i] = new DataPoint(dataX[i], dataY[i]);
                     }
+
+                    // Assign the DataPoints array to ItemsSource
+                    lineSeries.ItemsSource = dataPoints;
 
                     model.Series.Add(lineSeries);
                     plotView1.Model = model;

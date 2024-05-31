@@ -73,6 +73,7 @@ namespace Plot
             // 
             // buttonStop
             // 
+            this.buttonStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStop.Location = new System.Drawing.Point(420, 63);
             this.buttonStop.Margin = new System.Windows.Forms.Padding(1);
             this.buttonStop.Name = "buttonStop";
@@ -84,6 +85,7 @@ namespace Plot
             // 
             // buttonClear
             // 
+            this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonClear.Location = new System.Drawing.Point(420, 6);
             this.buttonClear.Margin = new System.Windows.Forms.Padding(1);
             this.buttonClear.Name = "buttonClear";
@@ -95,6 +97,7 @@ namespace Plot
             // 
             // buttonRun
             // 
+            this.buttonRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRun.Location = new System.Drawing.Point(420, 33);
             this.buttonRun.Margin = new System.Windows.Forms.Padding(1);
             this.buttonRun.Name = "buttonRun";
