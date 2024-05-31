@@ -58,7 +58,7 @@ namespace Plot
 
         private void LogMsg(string msg)
         {
-            LogTextBox.AppendText(msg + '\n');
+            LogTextBox.AppendText(msg + "\r\n");
         }
 
         /// <summary>
@@ -84,6 +84,7 @@ namespace Plot
             hsiClient?.Dispose();
             try
             {
+                InitializeTekVisaConnections(channels, visaAddTextBox.Text);
                 hsiClient = HSIClient.Connect(ip, channels);
                 if (hsiClient == null) return;
                 connected_ip = ip;
@@ -139,7 +140,7 @@ namespace Plot
             LogTextBox.AppendText("Connected to visa: " + isConnectToVisa + '\n');
             tekVisaWrapper.TurnOnChannels(channels);
             tekVisaWrapper.SetScopeParams();
-            tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
+            tekVisaWrapper.SetRlen(rlens[0]);
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
