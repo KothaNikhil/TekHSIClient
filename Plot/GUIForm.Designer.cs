@@ -40,6 +40,7 @@ namespace Plot
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.ipTextBox = new System.Windows.Forms.TextBox();
+            this.plotView1 = new OxyPlot.WindowsForms.PlotView();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -158,10 +159,24 @@ namespace Plot
             this.ipTextBox.Text = "134.64.244.152";
             this.ipTextBox.TextChanged += new System.EventHandler(this.ipTextBox_TextChanged);
             // 
+            // plotView1
+            // 
+            this.plotView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.plotView1.Location = new System.Drawing.Point(0, 97);
+            this.plotView1.Name = "plotView1";
+            this.plotView1.PanCursor = System.Windows.Forms.Cursors.Hand;
+            this.plotView1.Size = new System.Drawing.Size(502, 353);
+            this.plotView1.TabIndex = 14;
+            this.plotView1.Text = "plotView1";
+            this.plotView1.ZoomHorizontalCursor = System.Windows.Forms.Cursors.SizeWE;
+            this.plotView1.ZoomRectangleCursor = System.Windows.Forms.Cursors.SizeNWSE;
+            this.plotView1.ZoomVerticalCursor = System.Windows.Forms.Cursors.SizeNS;
+            // 
             // GUIForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.plotView1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.LogTextBox);
             this.Name = "GUIForm";
@@ -186,5 +201,6 @@ namespace Plot
         private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Button buttonRun;
+        private OxyPlot.WindowsForms.PlotView plotView1;
     }
 }

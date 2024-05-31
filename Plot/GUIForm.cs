@@ -144,25 +144,8 @@ namespace Plot
                     }
 
                     model.Series.Add(lineSeries);
-
-                    // Create a PlotView and assign the model
-                    var plotView = new PlotView
-                    {
-                        Model = model,
-                        Dock = DockStyle.Fill
-                    };
-
-                    // Add PlotView to your form or control
-                    this.Controls.Add(plotView);
-
-                    //LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, dataY, color: Colors[0]);
-
-                    //graphPane.XAxis.Scale.Min = 0; // Minimum value
-                    //graphPane.XAxis.Scale.Max = wfm.Count; // Maximum value
+                    plotView1.Model = model;
                 }
-
-                //zedGraphControl1.AxisChange();
-                //zedGraphControl1.Invalidate();
             }));
             tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
             Thread.Sleep(1000);
