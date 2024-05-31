@@ -93,6 +93,10 @@
     <Content Include="License-LGPL.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\TekHighSpeedAPI\TekHighSpeedAPI.csproj">
+      <Project>{CB9540CC-8286-4E70-A6E1-6687BF3EA32C}</Project>
+      <Name>TekHighSpeedAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VisaAndHSIwrapper\VisaAndHSIwrapper.csproj">
       <Project>{ccff316a-e544-4f16-9d63-41a10bb525fa}</Project>
       <Name>VisaAndHSIwrapper</Name>

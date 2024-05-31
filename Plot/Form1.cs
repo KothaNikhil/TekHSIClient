@@ -8,14 +8,17 @@ using ZedGraph;
 using System.Diagnostics;
 using VisaAndHSIwrapper;
 using Tek.Scope.Support;
+using TekHighspeedAPI;
+using System.Threading;
 
 namespace Plot
 {
     public partial class Form1 : Form
     {
+        HSIClient hsiClient = null;
         private string ip = "";
         private string connected_ip = "-";
-        TekHSIwrapper tekHSIwrapper = null;
+        //TekHSIwrapper tekHSIwrapper = null;
         TekVisaWrapper tekVisaWrapper = null;
         private readonly GraphPane graphPane;
 
@@ -62,7 +65,7 @@ namespace Plot
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            tekHSIwrapper?.Dispose();
+            hsiClient?.Dispose();
             base.OnClosed(e);
         }
 
@@ -86,15 +89,47 @@ namespace Plot
             if (string.Compare(ip, connected_ip, StringComparison.CurrentCultureIgnoreCase) == 0) return;
             string[] channels = textBox2.Text.Split(',');
             string visaAddress = textBox3.Text;
-            tekHSIwrapper = new TekHSIwrapper();
-            tekHSIwrapper.DataAvaialble += TekHSIwrapper_DataAvaialble;
-            bool isConnectedToHSI = tekHSIwrapper.Connect(ip, channels);
-            textBox4.AppendText("Connected to HSI: " + isConnectedToHSI + '\n');
-            //if (isConnectedToHSI)
-            //{
-            //    //tekHSIwrapper.StartCapturingData();
-            //}
-            //InitializeTekVisaConnections(channels, visaAddress);
+            hsiClient?.Dispose();
+            try
+            {
+                hsiClient = HSIClient.Connect(ip, channels);
+                if (hsiClient == null) return;
+                connected_ip = ip;
+                hsiClient.DataAccess += HsiClient_DataAccess;
+                hsiClient.Start();
+            }
+            catch
+            {
+            }
+        }
+
+        private void HsiClient_DataAccess(HSIClient hsi, CancellationToken tok, IEnumerable<object> data, double updateTime)
+        {
+            BeginInvoke(new Action(() => 
+            {
+                List<INormalizedVector> wfms = new List<INormalizedVector>();
+                foreach (var datum in data.OrderBy(x => ((Tek.Scope.Support.INormalizedVector)x).SourceName))
+                {
+                    INormalizedVector wfm;
+                    if (datum is INormalizedVector)
+                        wfm = datum as INormalizedVector;
+                    else
+                        continue;
+
+                    wfms.Add(wfm);
+                    int n = Convert.ToInt32(wfm.Count); // Replace with your desired value of n
+                    double[] dataX = Enumerable.Range(0, n).Select(x => (double)x).ToArray();
+
+                    LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, wfm.ToArray(), color: Colors[0]);
+
+                    // Set the x-axis scale
+                    graphPane.XAxis.Scale.Min = 0; // Minimum value
+                    graphPane.XAxis.Scale.Max = wfm.Count; // Maximum value
+                }
+
+                zedGraphControl1.AxisChange();
+                zedGraphControl1.Invalidate();
+            }));
         }
 
         private void InitializeTekVisaConnections(string[] channels, string visaAddress)
@@ -104,7 +139,7 @@ namespace Plot
             bool isConnectToVisa = tekVisaWrapper.Connect(visaAddress);
             if (!isConnectToVisa)
             {
-                tekHSIwrapper.Dispose();
+                //tekHSIwrapper.Dispose();
                 return;
             }
             textBox4.AppendText("Connected to visa: " + isConnectToVisa + '\n');
@@ -120,7 +155,8 @@ namespace Plot
 
         private void buttonStop_Click(object sender, EventArgs e)
         {
-            tekHSIwrapper.Dispose();
+            hsiClient?.Dispose();
+            //tekHSIwrapper.Dispose();
         }
 
         private void TekHSIwrapper_DataAvaialble(object sender, EventArgs e)
@@ -153,14 +189,14 @@ namespace Plot
                 zedGraphControl1.AxisChange();
                 zedGraphControl1.Invalidate();
             }
-            if (rlenIndex >= rlens.Length)
-            {
-                tekHSIwrapper.Dispose();
-                tekVisaWrapper?.Dispose();
-                return;
-            }
-            tekVisaWrapper?.SetRlen(rlens[rlenIndex++]);
-            tekHSIwrapper.SubscribeToDataAccess();
+            //if (rlenIndex >= rlens.Length)
+            //{
+            //    //tekHSIwrapper.Dispose();
+            //    tekVisaWrapper?.Dispose();
+            //    return;
+            //}
+            //tekVisaWrapper?.SetRlen(rlens[rlenIndex++]);
+            //tekHSIwrapper.SubscribeToDataAccess();
         }
 
         private void ClearGraph()
