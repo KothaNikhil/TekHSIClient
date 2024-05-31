@@ -76,16 +76,6 @@ namespace Plot
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            ip = ipTextBox.Text;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void buttonRun_Click(object sender, EventArgs e)
         {
             if (string.Compare(ip, connected_ip, StringComparison.CurrentCultureIgnoreCase) == 0) return;
@@ -120,18 +110,19 @@ namespace Plot
                         continue;
 
                     wfms.Add(wfm);
-                    int n = Convert.ToInt32(wfm.Count); // Replace with your desired value of n
-                    double[] dataX = Enumerable.Range(0, n).Select(x => (double)x).ToArray();
+                    LogMsg(wfm.SourceName + ":" + wfm.Count);
+                    //int n = Convert.ToInt32(wfm.Count); // Replace with your desired value of n
+                    //double[] dataX = Enumerable.Range(0, n).Select(x => (double)x).ToArray();
 
-                    LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, wfm.ToArray(), color: Colors[0]);
+                    //LineItem curve = graphPane.AddCurve(wfm.SourceName, dataX, wfm.ToArray(), color: Colors[0]);
 
-                    // Set the x-axis scale
-                    graphPane.XAxis.Scale.Min = 0; // Minimum value
-                    graphPane.XAxis.Scale.Max = wfm.Count; // Maximum value
+                    //// Set the x-axis scale
+                    //graphPane.XAxis.Scale.Min = 0; // Minimum value
+                    //graphPane.XAxis.Scale.Max = wfm.Count; // Maximum value
                 }
 
-                zedGraphControl1.AxisChange();
-                zedGraphControl1.Invalidate();
+                //zedGraphControl1.AxisChange();
+                //zedGraphControl1.Invalidate();
             }));
         }
 
@@ -169,6 +160,11 @@ namespace Plot
             // Refresh the plot
             zedGraphControl1.AxisChange();
             zedGraphControl1.Invalidate();
+        }
+
+        private void ipTextBox_TextChanged(object sender, EventArgs e)
+        {
+            ip = ipTextBox.Text;
         }
     }
 }

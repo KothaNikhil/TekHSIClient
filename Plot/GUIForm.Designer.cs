@@ -32,16 +32,16 @@ namespace Plot
             this.components = new System.ComponentModel.Container();
             this.LogTextBox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.zedGraphControl1 = new ZedGraph.ZedGraphControl();
+            this.buttonStop = new System.Windows.Forms.Button();
+            this.buttonClear = new System.Windows.Forms.Button();
+            this.buttonRun = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.visaAddTextBox = new System.Windows.Forms.TextBox();
             this.channelsTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.ipTextBox = new System.Windows.Forms.TextBox();
-            this.buttonStop = new System.Windows.Forms.Button();
-            this.buttonClear = new System.Windows.Forms.Button();
-            this.buttonRun = new System.Windows.Forms.Button();
+            this.zedGraphControl1 = new ZedGraph.ZedGraphControl();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,22 +72,38 @@ namespace Plot
             this.panel1.Size = new System.Drawing.Size(502, 97);
             this.panel1.TabIndex = 13;
             // 
-            // zedGraphControl1
+            // buttonStop
             // 
-            this.zedGraphControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.zedGraphControl1.Location = new System.Drawing.Point(0, 97);
-            this.zedGraphControl1.Margin = new System.Windows.Forms.Padding(7);
-            this.zedGraphControl1.Name = "zedGraphControl1";
-            this.zedGraphControl1.ScrollGrace = 0D;
-            this.zedGraphControl1.ScrollMaxX = 0D;
-            this.zedGraphControl1.ScrollMaxY = 0D;
-            this.zedGraphControl1.ScrollMaxY2 = 0D;
-            this.zedGraphControl1.ScrollMinX = 0D;
-            this.zedGraphControl1.ScrollMinY = 0D;
-            this.zedGraphControl1.ScrollMinY2 = 0D;
-            this.zedGraphControl1.Size = new System.Drawing.Size(502, 353);
-            this.zedGraphControl1.TabIndex = 14;
-            this.zedGraphControl1.UseExtendedPrintDialog = true;
+            this.buttonStop.Location = new System.Drawing.Point(420, 63);
+            this.buttonStop.Margin = new System.Windows.Forms.Padding(1);
+            this.buttonStop.Name = "buttonStop";
+            this.buttonStop.Size = new System.Drawing.Size(64, 22);
+            this.buttonStop.TabIndex = 19;
+            this.buttonStop.Text = "Stop";
+            this.buttonStop.UseVisualStyleBackColor = true;
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            // 
+            // buttonClear
+            // 
+            this.buttonClear.Location = new System.Drawing.Point(420, 6);
+            this.buttonClear.Margin = new System.Windows.Forms.Padding(1);
+            this.buttonClear.Name = "buttonClear";
+            this.buttonClear.Size = new System.Drawing.Size(64, 22);
+            this.buttonClear.TabIndex = 18;
+            this.buttonClear.Text = "Clear";
+            this.buttonClear.UseVisualStyleBackColor = true;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            // 
+            // buttonRun
+            // 
+            this.buttonRun.Location = new System.Drawing.Point(420, 33);
+            this.buttonRun.Margin = new System.Windows.Forms.Padding(1);
+            this.buttonRun.Name = "buttonRun";
+            this.buttonRun.Size = new System.Drawing.Size(64, 22);
+            this.buttonRun.TabIndex = 17;
+            this.buttonRun.Text = "Run";
+            this.buttonRun.UseVisualStyleBackColor = true;
+            this.buttonRun.Click += new System.EventHandler(this.buttonRun_Click);
             // 
             // label3
             // 
@@ -142,41 +158,28 @@ namespace Plot
             this.ipTextBox.Size = new System.Drawing.Size(161, 20);
             this.ipTextBox.TabIndex = 11;
             this.ipTextBox.Text = "134.64.244.152";
+            this.ipTextBox.TextChanged += new System.EventHandler(this.ipTextBox_TextChanged);
             // 
-            // buttonStop
+            // zedGraphControl1
             // 
-            this.buttonStop.Location = new System.Drawing.Point(420, 63);
-            this.buttonStop.Margin = new System.Windows.Forms.Padding(1);
-            this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(64, 22);
-            this.buttonStop.TabIndex = 19;
-            this.buttonStop.Text = "Stop";
-            this.buttonStop.UseVisualStyleBackColor = true;
-            // 
-            // buttonClear
-            // 
-            this.buttonClear.Location = new System.Drawing.Point(420, 6);
-            this.buttonClear.Margin = new System.Windows.Forms.Padding(1);
-            this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(64, 22);
-            this.buttonClear.TabIndex = 18;
-            this.buttonClear.Text = "Clear";
-            this.buttonClear.UseVisualStyleBackColor = true;
-            // 
-            // buttonRun
-            // 
-            this.buttonRun.Location = new System.Drawing.Point(420, 33);
-            this.buttonRun.Margin = new System.Windows.Forms.Padding(1);
-            this.buttonRun.Name = "buttonRun";
-            this.buttonRun.Size = new System.Drawing.Size(64, 22);
-            this.buttonRun.TabIndex = 17;
-            this.buttonRun.Text = "Run";
-            this.buttonRun.UseVisualStyleBackColor = true;
+            this.zedGraphControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.zedGraphControl1.Location = new System.Drawing.Point(0, 97);
+            this.zedGraphControl1.Margin = new System.Windows.Forms.Padding(7);
+            this.zedGraphControl1.Name = "zedGraphControl1";
+            this.zedGraphControl1.ScrollGrace = 0D;
+            this.zedGraphControl1.ScrollMaxX = 0D;
+            this.zedGraphControl1.ScrollMaxY = 0D;
+            this.zedGraphControl1.ScrollMaxY2 = 0D;
+            this.zedGraphControl1.ScrollMinX = 0D;
+            this.zedGraphControl1.ScrollMinY = 0D;
+            this.zedGraphControl1.ScrollMinY2 = 0D;
+            this.zedGraphControl1.Size = new System.Drawing.Size(502, 353);
+            this.zedGraphControl1.TabIndex = 14;
+            this.zedGraphControl1.UseExtendedPrintDialog = true;
             // 
             // GUIForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.zedGraphControl1);
             this.Controls.Add(this.panel1);
