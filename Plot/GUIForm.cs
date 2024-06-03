@@ -16,6 +16,7 @@ using VisaAndHSIwrapper;
 using OxyPlot;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
+using System.IO;
 
 namespace Plot
 {
@@ -25,6 +26,9 @@ namespace Plot
         private string ip = "";
         private string connected_ip = "-";
         TekVisaWrapper tekVisaWrapper = null;
+        string filePath = "saveResultsTocsv.csv";
+        bool saveToFile = false;
+        bool plotToUI = false;
 
         string[] rlens = new string[] {"1000","2000","5000","10000","20000","50000",
                 "100000","200000","500000","1000000","2000000", "5000000","10000000", "1000" };//, "20000000", "50000000"};
@@ -78,6 +82,7 @@ namespace Plot
         private void buttonRun_Click(object sender, EventArgs e)
         {
             if (string.Compare(ip, connected_ip, StringComparison.CurrentCultureIgnoreCase) == 0) return;
+            File.Delete(filePath);
             rlenIndex = 0;
             string[] channels = channelsTextBox.Text.Split(',');
             string visaAddress = visaAddTextBox.Text;
@@ -136,24 +141,45 @@ namespace Plot
 
                     var dataY = wfm.ToArray();
 
-                    PlotModel model = new PlotModel { Title = "Example" };
-                    LineSeries lineSeries = new LineSeries { Title = "Data", Color = OxyColors.Blue };
-                    DataPoint[] dataPoints = new DataPoint[n];
-                    for (int i = 0; i < n; i++)
-                    {
-                        dataPoints[i] = new DataPoint(dataX[i], dataY[i]);
-                    }
-
-                    // Assign the DataPoints array to ItemsSource
-                    lineSeries.ItemsSource = dataPoints;
-
-                    model.Series.Add(lineSeries);
-                    plotView1.Model = model;
+                    if(saveToFile)
+                        SaveToCsv(rlens[rlenIndex -1], n, dataX, dataY);
+                    if(plotToUI)
+                        PlotToApp(n, dataX, dataY);
                 }
             }));
             tekVisaWrapper.SetRlen(rlens[rlenIndex++]);
             Thread.Sleep(1000);
             hsiClient.DataAccess += HsiClient_DataAccess;
+        }
+
+        private void SaveToCsv(string rlen, int n, double[] dataX, double[] dataY)
+        {
+            StringBuilder csvContent = new StringBuilder();
+            csvContent.AppendLine("Record Length," + rlen);
+            for (int i = 0; i < n; i++)
+            {
+                csvContent.AppendLine(dataX[i].ToString() + ',' + dataY[i].ToString());
+            }
+
+            // Write CSV content to file
+            File.AppendAllText(filePath, csvContent.ToString());
+        }
+
+        private void PlotToApp(int n, double[] dataX, double[] dataY)
+        {
+            PlotModel model = new PlotModel { Title = "Example" };
+            LineSeries lineSeries = new LineSeries { Title = "Data", Color = OxyColors.Blue };
+            DataPoint[] dataPoints = new DataPoint[n];
+            for (int i = 0; i < n; i++)
+            {
+                dataPoints[i] = new DataPoint(dataX[i], dataY[i]);
+            }
+
+            // Assign the DataPoints array to ItemsSource
+            lineSeries.ItemsSource = dataPoints;
+
+            model.Series.Add(lineSeries);
+            plotView1.Model = model;
         }
 
         private bool InitializeTekVisaConnections(string[] channels, string visaAddress)
