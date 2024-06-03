@@ -39,9 +39,9 @@ namespace VisaAndHSIwrapper
         public void SetScopeParams()
         {
             Write("*RST");
-            Write("DISplay:WAVEform OFF");
+            //Write("DISplay:WAVEform OFF");
             Write("HOR:MODE MAN");
-            Write("HOR:MODE:RECO 2500");
+            //Write("HOR:MODE:RECO 2500");
             Write("ACQuire:STOPAfter RUNStop");
             Write("ACQuire:STATE ON");
         }
@@ -57,6 +57,7 @@ namespace VisaAndHSIwrapper
         public void SetRlen(string rlen)
         {
             Write("HOR:MODE:RECO " + rlen);
+            StatusMessageUpdated?.Invoke("record length set to: " + rlen, null);
         }
 
         public void ResetScope()

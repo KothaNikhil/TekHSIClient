@@ -253,7 +253,7 @@ namespace TekHighspeedAPI
                 Thread.Sleep(10);
                 State = HSIScopeClientState.Disconnected;
                 StatusMessage("Disconnected");
-
+                _running = false;
                 _connect = null;
             }
             catch (RpcException rpc)
@@ -1074,8 +1074,8 @@ namespace TekHighspeedAPI
 #if VERBOSE
             EventLogger.AddEvent($"WaitForDataAccess Enter");
 #endif
-                ConnectStatus status;
-                while ((status = _connect.WaitForDataAccess(new ConnectRequest()).Status) == ConnectStatus.Success)
+                ConnectStatus status = ConnectStatus.Unspecified;
+                while (_connect != null && ((status = _connect.WaitForDataAccess(new ConnectRequest()).Status) == ConnectStatus.Success))
                     try
                     {
                         _lock.EnterWriteLock();
